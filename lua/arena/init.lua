@@ -200,6 +200,12 @@ function M.setup(opts)
     end
   end
   frecency.tune(config.algorithm)
+  for _, buf in pairs(vim.api.nvim_list_bufs()) do
+    local bufname = vim.api.nvim_buf_get_name(buf)
+    if bufname ~= "" and vim.o.buftype == "" then
+      frecency.update_item(bufname, { buf = buf })
+    end
+  end
 end
 
 local group = vim.api.nvim_create_augroup("arena", { clear = true })
