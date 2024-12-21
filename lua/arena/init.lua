@@ -201,8 +201,13 @@ end
 --- @param opts table?
 function M.setup(opts)
   opts = opts or {}
-  config = vim.tbl_deep_extend("force", config, opts)
-  M.window.keymaps = vim.tbl_deep_extend("force", DEFAULT_KEYMAPS, config.keybinds)
+  for k, v in pairs(opts) do
+    if type(v) == "table" and type(config[k]) == "table" then
+      config[k] = vim.tbl_deep_extend("force", config[k], v)
+    else
+      config[k] = v
+    end
+  end
   frecency.tune(config.algorithm)
   M.init_buffers()
 end
